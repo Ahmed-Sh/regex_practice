@@ -39,8 +39,20 @@ def reg_sentence(reg, sentence):
     return False
 
 
+def input_handling(reg, text):
+    for i in reg_switch.keys():
+        if i in reg:
+            reg = reg.replace(i, reg_switch[i])
+    for i in word_switch.keys():
+        if i in text:
+            text = text.replace(i, word_switch[i])
+    return reg, text
+
+
 def reg_processing(reg, text):
     if len(reg) > 1:
+        if "\\" in reg:
+            reg, text = input_handling(reg, text)
         if reg[0] == "^" and reg[-1] == "$":
             pattern = ("?", "*", "+")
             for i in pattern:
@@ -70,4 +82,7 @@ def reg_processing(reg, text):
 
 if __name__ == "__main__":
     string = input().split("|")
+    pattern = ("?", "*", "+")
+    reg_switch = {"\\.": ">", "\\+": "=", "\\*": "8", "\\?": "/", "\\\\": "`"}
+    word_switch = {".": ">", "+": "=", "*": "8", "?": "/", "\\": "`"}
     print(reg_processing(string[0], string[1]))
